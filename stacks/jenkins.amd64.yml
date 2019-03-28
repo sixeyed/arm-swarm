@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+
+  jenkins:
+    image: sixeyed/jenkins:2.150.3-alpine-amd64
+    deploy:
+      placement:
+        constraints: 
+          - node.labels.arch == amd64

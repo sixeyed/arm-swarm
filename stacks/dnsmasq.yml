@@ -1,0 +1,49 @@
+version: '3.7'
+
+services:
+
+  dns:
+    image: sixeyed/dnsmasq:arm64
+    extra_hosts:
+      - "pine64-01.sixeyed:192.168.2.240"
+      - "pine64-02.sixeyed:192.168.2.241"
+      - "pine64-03.sixeyed:192.168.2.242"
+      - "pine64-04.sixeyed:192.168.2.243"
+      - "pine64-05.sixeyed:192.168.2.244"
+      - "pine64-06.sixeyed:192.168.2.245"
+      - "pine64-07.sixeyed:192.168.2.246"
+      - "up-ub1604.sixeyed:192.168.2.120"
+      - "linux-01.sixeyed:192.168.2.150"
+      - "windows-01.sixeyed:192.168.2.160"
+      - "managers.swarm.sixeyed:192.168.2.240"
+      - "managers.swarm.sixeyed:192.168.2.241"
+      - "managers.swarm.sixeyed:192.168.2.242"
+      - "arm.workers.swarm.sixeyed:192.168.2.243"
+      - "arm.workers.swarm.sixeyed:192.168.2.244"
+      - "arm.workers.swarm.sixeyed:192.168.2.245"
+      - "arm.workers.swarm.sixeyed:192.168.2.246"
+    configs:      
+      - source: dnsmasq
+        target: /etc/dnsmasq.conf
+    ports:
+      - "53:53/udp"            
+    networks:
+      - infrastructure
+    deploy:
+      mode: global
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 100M  
+      placement:
+        constraints:
+          - node.platform.os == linux
+          - node.role == manager
+
+networks:
+  infrastructure:
+
+configs:
+  dnsmasq:
+    external:
+      name: dnsmasq.conf-201903191344

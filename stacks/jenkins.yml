@@ -1,0 +1,74 @@
+version: '3.7'
+
+services:
+
+  jenkins:
+    user: 0:0
+    environment:
+      - JENKINS_HOME=/data
+    volumes:
+      - /mnt/gfs-class2/jenkins:/data
+      - /mnt/gfs-class3/jenkins:/data/jobs
+      - jenkins-logs:/data/logs
+      - jenkins-war:/data/war
+      - jenkins-init.groovy.d:/data/init.groovy.d
+    networks:
+      - frontend
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.frontend.rule=Host:jenkins.athome.ga"
+        - "traefik.port=8080"
+        - "traefik.docker.network=frontend"
+      resources:
+        limits:
+          cpus: '0.70'
+          memory: 1000M
+      placement:
+        constraints:
+          - node.platform.os == linux
+          - node.labels.storage == gluster
+          - node.role == worker
+
+networks:
+  frontend:
+    external:
+      name: 
+        frontend
+
+volumes:
+  jenkins-logs:
+  jenkins-war:
+  jenkins-init.groovy.d:
+  
+# mkdir -p /mnt/gfs-class2/jenkins /mnt/gfs-class3/jenkins
+
+
+
+#default to dispersed
+#
+#total 88
+#-rw-r--r--  1 root root 1645 Mar  8 12:02 config.xml
+#-rw-r--r--  1 root root  156 Mar  8 12:02 hudson.model.UpdateCenter.xml
+#-rw-r--r--  1 root root  370 Mar  7 22:17 hudson.plugins.git.GitTool.xml
+#-rw-------  1 root root 1712 Mar  7 22:08 identity.key.enc
+#drwxr-xr-x  2 root root 4096 Mar  7 22:07 init.groovy.d <-- local
+#-rw-r--r--  1 root root    5 Mar  7 22:41 jenkins.install.InstallUtil.lastExecVersion
+#-rw-r--r--  1 root root    5 Mar  7 22:41 jenkins.install.UpgradeWizard.state
+#-rw-r--r--  1 root root  182 Mar  7 22:20 jenkins.model.JenkinsLocationConfiguration.xml
+#-rw-r--r--  1 root root  171 Mar  7 22:08 jenkins.telemetry.Correlator.xml
+#drwxr-xr-x  2 root root 4096 Mar  7 22:08 jobs <-- distributed
+#drwxr-xr-x  3 root root 4096 Mar  7 22:08 logs <-- local
+#-rw-r--r--  1 root root  907 Mar  8 12:02 nodeMonitors.xml
+#drwxr-xr-x  2 root root 4096 Mar  7 22:08 nodes
+#drwxr-xr-x 56 root root 4096 Mar  7 22:19 plugins
+#-rw-r--r--  1 root root  129 Mar  8 11:35 queue.xml.bak
+#-rw-r--r--  1 root root   64 Mar  7 22:07 secret.key
+#-rw-r--r--  1 root root    0 Mar  7 22:07 secret.key.not-so-secret
+#drwx------  4 root root 4096 Mar  7 22:20 secrets
+#drwxr-xr-x  2 root root 4096 Mar  7 22:16 updates
+#drwxr-xr-x  2 root root 4096 Mar  7 22:08 userContent
+#drwxr-xr-x  3 root root 4096 Mar  7 22:20 users
+#drwxr-xr-x 11 root root 4096 Mar  7 22:07 war <-- local
+#drwxr-xr-x  2 root root 4096 Mar  7 22:18 workflow-libs

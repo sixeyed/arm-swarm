@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+
+  gogs:
+    image: sixeyed/gogs:aarch64
+    environment:
+      - PUID=0
+      - PGID=0
+    user: 0:0
+    volumes:
+      - /mnt/gfs-class2/gogs:/data
+      - gogs-logs:/logs
+    networks:
+      - frontend
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.frontend.rule=Host:git.athome.ga"
+        - "traefik.port=3000"
+        - "traefik.docker.network=frontend"
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+      placement:
+        constraints: 
+          - node.platform.os == linux
+          - node.labels.arch == arm64
+          - node.labels.storage == gluster
+          - node.role == worker
+
+networks:
+  frontend:
+    external:
+      name: 
+        frontend
+
+volumes:
+  gogs-logs:
+
+
+# mkdir -p /mnt/gfs-class2/gogs /docker/gogs/logs

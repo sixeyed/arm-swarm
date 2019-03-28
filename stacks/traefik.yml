@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+
+  reverse-proxy:
+    image: traefik:1.7.9-alpine    
+    command:
+      - "--api"
+      - "--entrypoints=Name:http Address::80 Compress:true"
+      - "--entrypoints=Name:https Address::443 TLS"
+      - "--docker"
+      - "--docker.swarmMode"
+      - "--docker.watch"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8088:8080"
+    networks:
+      - frontend
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.platform.os == linux
+          - node.role == manager
+
+networks:
+  frontend:
+    external:
+      name: 
+        frontend
