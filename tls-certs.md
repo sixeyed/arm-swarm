@@ -1,8 +1,8 @@
-# Generating TLS certs for seuring Swarm nodes
+# Generating TLS certs for securing Docker Swarm nodes
 
 See https://docs.docker.com/engine/security/https/
 
-You will need [OpenSSL]().
+You will need [OpenSSL](https://www.openssl.org).
 
 ## First create the Certificate Authority (CA)
 
@@ -25,7 +25,7 @@ You'll use these certs in the Docker Engine configuration to secure the channel.
 You need to set your own server details in the command:
 
 * DNS name in the CN field (`linux-01.sixeyed` in this example)
-* IP addres in `subjectAltName1` (`192.168.1.200` below)
+* IP address in `subjectAltName` (`192.168.1.200` below)
 
 ```
 mkdir  ~/certs/linux-01 && cd  ~/certs/linux-01
