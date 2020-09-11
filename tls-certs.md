@@ -31,7 +31,7 @@ You need to set your own server details in the command:
 mkdir  ~/certs/linux-01 && cd  ~/certs/linux-01
 openssl genrsa -out server-key.pem 4096
 openssl req -subj "/CN=linux-01.sixeyed" -sha256 -new -key server-key.pem -out server.csr
-echo subjectAltName = DNS:linux-01.sixeyed,IP:192.168.1.200,IP:127.0.0.1 >> extfile.cnf
+echo subjectAltName = DNS.1:linux-01.sixeyed,IP.1:192.168.1.200,IP.2:127.0.0.1 >> extfile.cnf
 echo extendedKeyUsage = serverAuth >> extfile.cnf
 openssl x509 -req -days 3650 -sha256 -in server.csr -CA ../docker-ca.pem -CAkey ../docker-ca-key.pem -CAcreateserial -out server-cert.pem -extfile extfile.cnf -passin file:../docker-ca.password
 ```
